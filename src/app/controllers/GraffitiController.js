@@ -34,6 +34,16 @@ class GraffitiController {
 
     return res.json({ id, name, description, user_id });
   }
+
+  async delete(req, res) {
+    const graffiti = await Graffiti.destroy({
+      where: {
+        id: req.params.id
+      }
+    });
+
+    return res.json(graffiti);
+  }
 }
 
 export default new GraffitiController();

@@ -1,5 +1,7 @@
 import * as Yup from "yup";
 import User from "../models/User";
+import Queue from "../../lib/Queue";
+import CreateMail from "../jobs/CreateMail";
 
 class UserController {
   async store(req, res) {
@@ -24,6 +26,11 @@ class UserController {
     }
 
     const { id, name, email, artist } = await User.create(req.body);
+
+    await Queue.add(CreateMail.key, {
+      name,
+      email
+    });
 
     return res.json({
       id,

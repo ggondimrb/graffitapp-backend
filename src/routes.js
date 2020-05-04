@@ -22,5 +22,6 @@ routes.post("/files", upload.single("file"), FileController.store);
 
 routes.post("/graffitis", GraffitiController.store);
 routes.get("/graffitis", GraffitiController.index);
+routes.delete("/graffitis/:id", GraffitiController.delete);
 
 export default routes;
