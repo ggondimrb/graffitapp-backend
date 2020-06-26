@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import Graffiti from "../models/Graffiti";
+import ArtLocalization from "../schemas/ArtLocalization";
 
 class GraffitiController {
   async index(req, res) {
@@ -26,13 +27,21 @@ class GraffitiController {
       return res.status(400).json({ error: "Validation fails" });
     }
 
-    const { id, name, description, user_id } = await Graffiti.create({
+    const { id, name, description, user_id, artist } = await Graffiti.create({
       name: req.body.name,
       description: req.body.description,
-      user_id: req.userId
+      user_id: req.userId,
+      artist: req.body.artist
     });
 
-    return res.json({ id, name, description, user_id });
+    const location = {
+      type: "Point",
+      coordinates: [req.body.longitude, req.body.latitude]
+    };
+
+    await ArtLocalization.create({ artist: req.userId, art: id, location });
+
+    return res.json({ id, name, description, user_id, artist });
   }
 
   async delete(req, res) {

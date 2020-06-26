@@ -1,5 +1,4 @@
 import File from "../models/File";
-import User from "../models/User";
 
 class FileController {
   async store(req, res) {
@@ -7,10 +6,11 @@ class FileController {
 
     const file = await File.create({
       name,
-      path
+      path,
+      graffiti_id: req.params.id
     });
 
-    await User.update({ avatar_id: file.id }, { where: { id: req.userId } });
+    //await User.update({ avatar_id: file.id }, { where: { id: req.userId } });
 
     return res.json(file);
   }

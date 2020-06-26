@@ -18,7 +18,7 @@ routes.use(authMiddleware);
 // rotas que precisam do middleware
 routes.put("/users", UserController.update);
 
-routes.post("/files", upload.single("file"), FileController.store);
+routes.post("/files/:id", upload.single("file"), FileController.store);
 
 routes.post("/graffitis", GraffitiController.store);
 routes.get("/graffitis", GraffitiController.index);

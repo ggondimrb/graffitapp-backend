@@ -20,6 +20,13 @@ class File extends Model {
 
     return this;
   }
+
+  static associate(models) {
+    this.belongsTo(models.Graffiti, {
+      foreignKey: "graffiti_id",
+      as: "graffiti"
+    });
+  }
 }
 
 export default File;

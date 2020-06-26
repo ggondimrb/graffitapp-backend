@@ -6,7 +6,8 @@ class Graffiti extends Model {
       {
         name: Sequelize.STRING,
         email: Sequelize.STRING,
-        description: Sequelize.STRING
+        description: Sequelize.STRING,
+        artist: Sequelize.STRING
       },
       {
         sequelize
