@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("graffitis", {
+    return queryInterface.createTable("users", {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -13,17 +13,13 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      description: {
+      email: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },
-      artist_name: {
+      password_hash: {
         type: Sequelize.STRING,
-        allowNull: false
-      },
-      point: {
-        type: Sequelize.GEOMETRY("POINT"),
         allowNull: false
       },
       created_at: {
@@ -38,6 +34,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable("graffitis");
+    return queryInterface.dropTable("users");
   }
 };

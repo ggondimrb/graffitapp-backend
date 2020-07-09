@@ -19,6 +19,7 @@ class UserController {
       return res.status(400).json({ error: "Validation fails" });
     }
 
+    console.log(req.body.email);
     const userExists = await User.findOne({ where: { email: req.body.email } });
 
     if (userExists) {
@@ -27,10 +28,10 @@ class UserController {
 
     const { id, name, email, artist } = await User.create(req.body);
 
-    await Queue.add(CreateMail.key, {
-      name,
-      email
-    });
+    // await Queue.add(CreateMail.key, {
+    //   name,
+    //   email
+    // });
 
     return res.json({
       id,

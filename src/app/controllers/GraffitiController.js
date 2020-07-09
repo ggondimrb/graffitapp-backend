@@ -1,16 +1,67 @@
 import * as Yup from "yup";
 import Graffiti from "../models/Graffiti";
-import ArtLocalization from "../schemas/ArtLocalization";
+import File from "../models/File";
+import Sequelize, { Op } from "sequelize";
 
 class GraffitiController {
   async index(req, res) {
     const { page = 1 } = req.query;
-    const graffitis = await Graffiti.findAll({
-      where: { user_id: req.userId },
-      order: ["name"],
-      attributes: ["id", "name", "description"],
-      limit: 20,
-      offset: (page - 1) * 20
+
+    const { latitude, longitude } = req.query;
+
+    var location = Sequelize.literal(
+      `ST_GeomFromText('POINT(${longitude} ${latitude})')`
+    );
+
+    const graffitis = await Graffiti.findAll(
+      {
+        attributes: [
+          "id",
+          "name",
+          "description",
+          "artist_name",
+          "created_at",
+          "point",
+          [
+            Sequelize.fn(
+              "ROUND",
+              Sequelize.fn(
+                "ST_Distance_Sphere",
+                Sequelize.col("point"),
+                location
+              ),
+              2
+            ),
+            "distance"
+          ]
+        ],
+        subQuery: false,
+        where: Sequelize.where(
+          Sequelize.fn("ST_Distance_Sphere", Sequelize.col("point"), location),
+          { [Op.lte]: 10000 }
+        ),
+        order: [["created_at", "DESC"]],
+        include: [
+          { model: File, as: "images", attributes: ["name", "path", "url"] }
+        ],
+        offset: (page - 1) * 20
+      }
+      // order: [[distance, "DESC"]],
+      // limit: 20,
+    );
+
+    return res.json(graffitis);
+  }
+
+  async indexOne(req, res) {
+    const graffitis = await Graffiti.findOne({
+      where: { id: req.params.id },
+      order: [["created_at", "DESC"]],
+      subQuery: false,
+      attributes: ["id", "name", "description", "artist", "created_at"],
+      include: [
+        { model: File, as: "graffiti", attributes: ["name", "path", "url"] }
+      ]
     });
 
     return res.json(graffitis);
@@ -27,21 +78,34 @@ class GraffitiController {
       return res.status(400).json({ error: "Validation fails" });
     }
 
-    const { id, name, description, user_id, artist } = await Graffiti.create({
-      name: req.body.name,
-      description: req.body.description,
-      user_id: req.userId,
-      artist: req.body.artist
-    });
-
     const location = {
       type: "Point",
       coordinates: [req.body.longitude, req.body.latitude]
     };
 
-    await ArtLocalization.create({ artist: req.userId, art: id, location });
+    const {
+      id,
+      name,
+      description,
+      user_id,
+      artist_name,
+      point
+    } = await Graffiti.create({
+      name: req.body.name,
+      description: req.body.description,
+      user_id: req.userId,
+      artist_name: req.body.artist_name,
+      point: location
+    });
 
-    return res.json({ id, name, description, user_id, artist });
+    // const location = {
+    //   type: "Point",
+    //   coordinates: [req.body.longitude, req.body.latitude]
+    // };
+
+    // await ArtLocalization.create({ artist: req.userId, art: id, location });
+
+    return res.json({ id, name, description, user_id, artist_name, point });
   }
 
   async delete(req, res) {

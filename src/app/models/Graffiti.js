@@ -1,13 +1,13 @@
-import Sequelize, { Model } from "sequelize";
+import Sequelize, { Model, DataTypes } from "sequelize";
 
 class Graffiti extends Model {
   static init(sequelize) {
     super.init(
       {
         name: Sequelize.STRING,
-        email: Sequelize.STRING,
         description: Sequelize.STRING,
-        artist: Sequelize.STRING
+        artist_name: Sequelize.STRING,
+        point: DataTypes.GEOMETRY("POINT")
       },
       {
         sequelize
@@ -19,6 +19,8 @@ class Graffiti extends Model {
 
   static associate(models) {
     this.belongsTo(models.User, { foreignKey: "user_id", as: "user" });
+
+    this.hasMany(models.File, { foreignKey: "graffiti_id", as: "images" });
   }
 }
 
