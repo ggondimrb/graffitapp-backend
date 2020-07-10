@@ -1,3 +1,4 @@
-https://img.shields.io/node/v/5.15.5
+![node](https://img.shields.io/node/v/package) ![npm](https://img.shields.io/npm/v/package)
+
 
 Hello
