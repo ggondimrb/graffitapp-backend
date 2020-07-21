@@ -21,6 +21,8 @@ class Graffiti extends Model {
     this.belongsTo(models.User, { foreignKey: "user_id", as: "user" });
 
     this.hasMany(models.File, { foreignKey: "graffiti_id", as: "images" });
+
+    this.hasMany(models.Like, { foreignKey: "graffiti_id", as: "likes" });
   }
 }
 

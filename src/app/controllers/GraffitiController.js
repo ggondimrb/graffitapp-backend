@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import Graffiti from "../models/Graffiti";
 import File from "../models/File";
+import Like from "../models/Like";
 import Sequelize, { Op } from "sequelize";
 
 class GraffitiController {
@@ -30,7 +31,7 @@ class GraffitiController {
                 Sequelize.col("point"),
                 location
               ),
-              2
+              0
             ),
             "distance"
           ]
@@ -60,7 +61,8 @@ class GraffitiController {
       subQuery: false,
       attributes: ["id", "name", "description", "artist", "created_at"],
       include: [
-        { model: File, as: "graffiti", attributes: ["name", "path", "url"] }
+        { model: File, as: "graffiti", attributes: ["name", "path", "url"] },
+        { model: Like, as: "likes", attributes: [graffiti_id] }
       ]
     });
 
