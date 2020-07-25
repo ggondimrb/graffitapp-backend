@@ -4,6 +4,8 @@ import File from "../models/File";
 import Like from "../models/Like";
 import Sequelize, { Op } from "sequelize";
 
+const { findConnections, sendMessage } = require("../../websocket");
+
 class GraffitiController {
   async index(req, res) {
     const { page = 1 } = req.query;
@@ -100,12 +102,14 @@ class GraffitiController {
       point: location
     });
 
-    // const location = {
-    //   type: "Point",
-    //   coordinates: [req.body.longitude, req.body.latitude]
-    // };
+    const graffiti = { id, name, description, user_id, artist_name, point };
 
-    // await ArtLocalization.create({ artist: req.userId, art: id, location });
+    const sendSocketMessageTo = findConnections({
+      latitude: graffiti.point.coordinates[1],
+      longitude: graffiti.point.coordinates[0]
+    });
+
+    sendMessage(sendSocketMessageTo, "graffiti-dev", graffiti);
 
     return res.json({ id, name, description, user_id, artist_name, point });
   }

@@ -4,10 +4,11 @@ import User from "../app/models/User";
 import File from "../app/models/File";
 import Graffiti from "../app/models/Graffiti";
 import Like from "../app/models/Like";
+import Comment from "../app/models/Comment";
 
 import databaseConfig from "../config/database";
 
-const models = [User, File, Graffiti, Like];
+const models = [User, File, Graffiti, Like, Comment];
 
 class Database {
   constructor() {

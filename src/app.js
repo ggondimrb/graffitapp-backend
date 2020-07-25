@@ -6,15 +6,20 @@ import Youch from "youch";
 import * as Sentry from "@sentry/node";
 import "express-async-errors";
 import routes from "./routes";
+import { setupWebsocket } from "./websocket";
 import sentryConfig from "./config/sentry";
-
 import "./database";
+
+const http = require("http");
 
 class App {
   constructor() {
     this.server = express();
 
     Sentry.init(sentryConfig);
+
+    const serverSetup = http.Server(this.server);
+    setupWebsocket(serverSetup);
 
     this.middlewares();
     this.routes();

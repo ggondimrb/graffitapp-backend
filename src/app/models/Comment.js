@@ -1,9 +1,11 @@
-import { Model } from "sequelize";
+import Sequelize, { Model } from "sequelize";
 
-class Like extends Model {
+class Comment extends Model {
   static init(sequelize) {
     super.init(
-      {},
+      {
+        comment: Sequelize.STRING
+      },
       {
         sequelize
       }
@@ -22,4 +24,4 @@ class Like extends Model {
   }
 }
 
-export default Like;
+export default Comment;
