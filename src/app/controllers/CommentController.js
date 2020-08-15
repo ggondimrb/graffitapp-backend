@@ -29,7 +29,7 @@ class CommentController {
   async delete(req, res) {
     await Comment.destroy({
       where: {
-        graffiti_id: req.params.id,
+        id: req.params.id,
         user_id: req.userId
       }
     });
@@ -41,7 +41,7 @@ class CommentController {
     const { graffiti_id } = req.params;
 
     const comments = await Comment.findAll({
-      where: { user_id: req.userId, graffiti_id },
+      where: { graffiti_id },
       attributes: ["id", "comment", "created_at"],
       order: [["created_at", "DESC"]],
       include: [{ model: User, as: "user", attributes: ["id", "name"] }]

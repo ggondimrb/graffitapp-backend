@@ -36,7 +36,8 @@ class GraffitiController {
               0
             ),
             "distance"
-          ]
+          ],
+          "user_id"
         ],
         subQuery: false,
         where: Sequelize.where(
