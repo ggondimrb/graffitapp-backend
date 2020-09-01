@@ -19,7 +19,7 @@ class UserController {
       return res.status(400).json({ error: "Validation fails" });
     }
 
-    console.log(req.body.email);
+    console.log(req.body);
     const userExists = await User.findOne({ where: { email: req.body.email } });
 
     if (userExists) {

@@ -72,6 +72,35 @@ class GraffitiController {
     return res.json(graffitis);
   }
 
+  async indexByUser(req, res) {
+    const { page = 1 } = req.query;
+
+    const graffitis = await Graffiti.findAll(
+      {
+        attributes: [
+          "id",
+          "name",
+          "description",
+          "artist_name",
+          "created_at",
+          "point",
+          "user_id"
+        ],
+        subQuery: false,
+        where: { user_id: req.userId },
+        order: [["created_at", "DESC"]],
+        include: [
+          { model: File, as: "images", attributes: ["name", "path", "url"] }
+        ],
+        offset: (page - 1) * 20
+      }
+      // order: [[distance, "DESC"]],
+      // limit: 20,
+    );
+
+    return res.json(graffitis);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string()

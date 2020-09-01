@@ -25,6 +25,7 @@ routes.post("/files/:id", upload.single("file"), FileController.store);
 routes.post("/graffitis", GraffitiController.store);
 routes.get("/graffitis", GraffitiController.index);
 routes.get("/graffitis/:id", GraffitiController.indexOne);
+routes.get("/graffitisByUser", GraffitiController.indexByUser);
 routes.delete("/graffitis/:id", GraffitiController.delete);
 
 routes.post("/like", LikeController.store);
